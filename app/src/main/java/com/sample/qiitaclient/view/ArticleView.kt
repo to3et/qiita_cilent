@@ -28,19 +28,20 @@ class ArticleView : FrameLayout {
                 defStyleAttr: Int,
                 defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
-    val profileImageView: ImageView by bindView(R.id.profile_image_view)
-
-    val titleTextView: TextView by bindView(R.id.title_text_view)
-
-    val userNameTextView: TextView by bindView(R.id.user_name_text_view)
+    private val profileImageView: ImageView
+    private val titleTextView: TextView
+    private val userNameTextView: TextView
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_article, this)
+        profileImageView = findViewById(R.id.profile_image_view)
+        titleTextView = findViewById(R.id.title_text_view)
+        userNameTextView = findViewById(R.id.user_name_text_view)
     }
 
     fun setArticle(article: Article) {
-        titleTextView?.text = article.title
-        userNameTextView?.text = article.user.name
+        titleTextView.text = article.title
+        userNameTextView.text = article.user.name
         Glide.with(context).load(article.user.profileImageUrl).into(profileImageView)
     }
 

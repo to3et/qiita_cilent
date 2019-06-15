@@ -8,5 +8,9 @@ import rx.Observable
 interface ArticleClient {
 
     @GET("/api/v2/items")
-    fun search(@Query("query") query: String): Observable<List<Article>>
+    fun search(
+        @Query("page") page: Int,
+        @Query("per_page") per_page: Int,
+        @Query("query") query: String
+    ): Observable<List<Article>>
 }

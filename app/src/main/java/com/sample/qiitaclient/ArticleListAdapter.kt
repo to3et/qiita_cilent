@@ -23,6 +23,4 @@ class ArticleListAdapter(private val context: Context) : BaseAdapter() {
         ((convertView as? ArticleView) ?: ArticleView(context)).apply {
             setArticle(articles[position])
         }
-
-
 }
