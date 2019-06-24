@@ -23,11 +23,6 @@ class ArticleView : FrameLayout {
                 attrs: AttributeSet?,
                 defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    constructor(context: Context,
-                attrs: AttributeSet?,
-                defStyleAttr: Int,
-                defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
-
     private val profileImageView: ImageView
     private val titleTextView: TextView
     private val userNameTextView: TextView

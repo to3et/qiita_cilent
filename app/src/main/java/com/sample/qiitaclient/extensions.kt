@@ -1,7 +1,7 @@
 package com.sample.qiitaclient
 
 import android.content.Context
-import android.support.annotation.IdRes
+import androidx.annotation.IdRes
 import android.view.View
 import android.widget.Toast
 

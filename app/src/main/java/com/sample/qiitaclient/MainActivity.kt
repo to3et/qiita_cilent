@@ -1,50 +1,67 @@
 package com.sample.qiitaclient
 
-import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.SearchView
-import android.support.v7.widget.Toolbar
 import android.view.Menu
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.ListView
-import android.widget.ProgressBar
-import com.sample.qiitaclient.client.ArticleClient
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.sample.qiitaclient.databinding.ActivityMainBinding
 import com.sample.qiitaclient.model.Article
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity
-import com.trello.rxlifecycle.kotlin.bindToLifecycle
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import com.sample.qiitaclient.viewmodel.ArticleListViewModel
 import javax.inject.Inject
 
-class MainActivity : RxAppCompatActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var listView: ListView
+
+    private lateinit var toolbar: Toolbar
 
     @Inject
-    lateinit var articleClient: ArticleClient
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    lateinit var progressBar: ProgressBar
+    private val viewModel by lazy {
+        ViewModelProviders.of(this, viewModelFactory).get(ArticleListViewModel::class.java)
+    }
 
-    lateinit var listView: ListView
-
-    lateinit var toolbar: Toolbar
+    private val binding by lazy {
+        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as QiitaClientApp).component.inject(this)
-        setContentView(R.layout.activity_main)
+
+        binding.lifecycleOwner = this
+        binding.viewmodel = viewModel
 
         toolbar = findViewById(R.id.main_toolbar)
+        setSupportActionBar(toolbar)
+
+        setupListView()
+    }
+
+    private fun setupListView() {
         listView = findViewById(R.id.list_view)
-        progressBar = findViewById(R.id.progress_bar)
+        val listAdapter = ArticleListAdapter(this)
+        listView.adapter = listAdapter
 
         listView.setOnItemClickListener { parent, view, position, id ->
             val intent = ArticleActivity.intent(
                 this,
-                listView.adapter.getItem(position) as Article)
+                listView.adapter.getItem(position) as Article
+            )
             startActivity(intent)
         }
 
-        setSupportActionBar(toolbar)
+        viewModel.articleList.observe(this, Observer {
+            listAdapter.articles = it
+            listAdapter.notifyDataSetChanged()
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -56,37 +73,12 @@ class MainActivity : RxAppCompatActivity() {
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                query?: return false
-                hideKeyboard()
-                progressBar.visibility = View.VISIBLE
-                val listAdapter = ArticleListAdapter(this@MainActivity)
-                listView.adapter = listAdapter
-
-                articleClient.search(
-                    1,
-                    30,
-                    "title:${query} tag:${query} body:${query}")
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doAfterTerminate {
-                        progressBar.visibility = View.GONE
-                    }
-                    .bindToLifecycle(this@MainActivity)
-                    .subscribe({
-                        listAdapter.articles = it
-                        listAdapter.notifyDataSetChanged()
-                    }, {
-                        toast("エラー: $it")
-                    })
-
+                query ?: return false
+                searchView.clearFocus()
+                viewModel.search(query)
                 return false
             }
         })
         return true
-    }
-
-    private fun hideKeyboard() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 }

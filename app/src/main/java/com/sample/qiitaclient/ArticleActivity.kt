@@ -3,7 +3,7 @@ package com.sample.qiitaclient
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.webkit.WebView
 import com.sample.qiitaclient.model.Article
 import com.sample.qiitaclient.view.ArticleView
