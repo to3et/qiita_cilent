@@ -25,7 +25,6 @@ class ClientModule {
     fun provideRetrofit(gson: Gson): Retrofit = Retrofit.Builder()
         .baseUrl("https://qiita.com")
         .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
 
     @Provides

@@ -51,7 +51,7 @@ dependencies {
 
     implementation 'io.reactivex:rxandroid:1.2.1'
 
-    def retrofitVersion = '2.0.2'
+    def retrofitVersion = '2.6.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"

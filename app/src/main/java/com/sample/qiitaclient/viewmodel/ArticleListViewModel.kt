@@ -36,12 +36,19 @@ class ArticleListViewModel @Inject constructor(
     }
 
     fun search(query: String) {
-        _isLoading.value = true
         launch {
-             _articleList.value = withContext(Dispatchers.Default) {
-                articleClient.search(query).await()
-             }
+            _isLoading.value = true
+            try {
+                val response = articleClient.search(query)
+                if (response.isSuccessful) {
+                    _articleList.value = response.body()
+                } else {
+                    // メッセージ表示
+                }
+            } catch (e: Exception) {
+                // エラーハンドリングする
+            }
+            _isLoading.value = false
         }
-        _isLoading.value = false
     }
 }
