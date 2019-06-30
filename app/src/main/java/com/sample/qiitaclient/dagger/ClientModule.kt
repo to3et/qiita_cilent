@@ -1,10 +1,13 @@
 package com.sample.qiitaclient.dagger
 
+import android.content.Context
+import androidx.room.Room
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.sample.qiitaclient.client.ArticleClient
+import com.sample.qiitaclient.db.ArticleDao
+import com.sample.qiitaclient.db.QiitaDb
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -31,4 +34,14 @@ class ClientModule {
     @Singleton
     fun provideArticleClient(retrofit: Retrofit): ArticleClient =
         retrofit.create(ArticleClient::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDb(context: Context): QiitaDb = Room
+        .databaseBuilder(context, QiitaDb::class.java, "qiita.db")
+        .build()
+
+    @Provides
+    @Singleton
+    fun provideArticleDao(db: QiitaDb): ArticleDao = db.articleDao()
 }

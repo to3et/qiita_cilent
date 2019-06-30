@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.sample.qiitaclient.databinding.ActivityMainBinding
-import com.sample.qiitaclient.model.Article
+import com.sample.qiitaclient.entity.Article
 import com.sample.qiitaclient.viewmodel.ArticleListViewModel
 import javax.inject.Inject
 
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as QiitaClientApp).component.inject(this)
+        (application as QiitaClientApp).appComponent.inject(this)
 
         binding.lifecycleOwner = this
         binding.viewmodel = viewModel

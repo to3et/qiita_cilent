@@ -5,6 +5,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Component(modules = [
+    ApplicationModule::class,
     ClientModule::class,
     ViewModelModule::class,
     ViewModelFactoryModule::class

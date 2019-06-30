@@ -1,7 +1,6 @@
 package com.sample.qiitaclient.view
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
@@ -9,8 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.sample.qiitaclient.R
-import com.sample.qiitaclient.bindView
-import com.sample.qiitaclient.model.Article
+import com.sample.qiitaclient.entity.Article
 
 class ArticleView : FrameLayout {
 

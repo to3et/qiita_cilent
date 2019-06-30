@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.webkit.WebView
-import com.sample.qiitaclient.model.Article
+import com.sample.qiitaclient.entity.Article
 import com.sample.qiitaclient.view.ArticleView
 
 class ArticleActivity : AppCompatActivity() {

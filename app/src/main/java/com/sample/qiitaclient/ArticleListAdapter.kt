@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import com.sample.qiitaclient.model.Article
+import com.sample.qiitaclient.entity.Article
 import com.sample.qiitaclient.view.ArticleView
 
 class ArticleListAdapter(private val context: Context) : BaseAdapter() {

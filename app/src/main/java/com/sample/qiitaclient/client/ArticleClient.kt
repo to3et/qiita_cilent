@@ -1,6 +1,6 @@
 package com.sample.qiitaclient.client
 
-import com.sample.qiitaclient.model.Article
+import com.sample.qiitaclient.entity.Article
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

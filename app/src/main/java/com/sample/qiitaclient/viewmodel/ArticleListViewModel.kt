@@ -3,29 +3,17 @@ package com.sample.qiitaclient.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sample.qiitaclient.client.ArticleClient
-import com.sample.qiitaclient.model.Article
-import kotlinx.coroutines.*
+import androidx.lifecycle.viewModelScope
+import com.sample.qiitaclient.repository.ArticleRefreshError
+import com.sample.qiitaclient.repository.ArticleRepository
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 class ArticleListViewModel @Inject constructor(
-    private val articleClient: ArticleClient
-) : ViewModel(), CoroutineScope {
+    private val articleRepository: ArticleRepository
+) : ViewModel() {
 
-    private val job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
-
-    override fun onCleared() {
-        job.cancel()
-        super.onCleared()
-    }
-
-    private val _articleList = MutableLiveData<List<Article>>()
-    val articleList: LiveData<List<Article>>
-        get() = _articleList
+    val articleList = articleRepository.article
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -36,19 +24,15 @@ class ArticleListViewModel @Inject constructor(
     }
 
     fun search(query: String) {
-        launch {
-            _isLoading.value = true
+        viewModelScope.launch {
             try {
-                val response = articleClient.search(query)
-                if (response.isSuccessful) {
-                    _articleList.value = response.body()
-                } else {
-                    // メッセージ表示
-                }
-            } catch (e: Exception) {
-                // エラーハンドリングする
+                _isLoading.value = true
+                articleRepository.search(query)
+            } catch (e: ArticleRefreshError) {
+                // メッセージ表示
+            } finally {
+                _isLoading.value = false
             }
-            _isLoading.value = false
         }
     }
 }
